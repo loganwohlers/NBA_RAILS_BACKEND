@@ -9,3 +9,6 @@ require 'bundler'
 Bundler.require
 
 require 'open-uri'
+require 'rest-client'
+require 'json'
+require 'net/http'

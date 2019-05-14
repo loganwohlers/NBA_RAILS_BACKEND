@@ -63,27 +63,6 @@ $team_codes={
 #   GENRES=[]
 
 #   def initialize(title)
-#     @name = name
-#     @MP  = MP
-#     @FG = FG   
-#     @FGA = FGA
-#     @FGP = FGP
-#     @TP = TP
-#     @TPA =TPA
-#     @TPP = TPP
-#     @FT = FT
-#     @FTA = FTA
-#     @FTP = FTP
-#     @ORB = ORB
-#     @DRB = DRB
-#     @TRB = TRB
-#     @AST = AST
-#     @STL = STL
-#     @BLK = BLK
-#     @TOV = TOV
-#     @PF = PF
-#     @PTS = PTS
-#     @PM = PM
 #   end
 
 #   def turn_page
@@ -243,5 +222,4 @@ shortened_schedule=schedule_check(2018)[0]
 
 puts JSON.pretty_generate(shortened_schedule)
 puts shortened_schedule['boxscore']['home']
-
 

@@ -14,6 +14,8 @@ gem 'pry'
 gem 'nokogiri'
 
 gem 'mechanize'
+gem 'rest-client'
+gem 'json'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
