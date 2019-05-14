@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :nba_teams
   resources :nba_seasons
   resources :nba_games
   resources :nba_players

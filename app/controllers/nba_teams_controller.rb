@@ -1,0 +1,2 @@
+class NbaTeamsController < ApplicationController
+end

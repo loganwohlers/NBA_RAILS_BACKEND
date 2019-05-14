@@ -34,6 +34,8 @@ $team_codes={
     'Washington Wizards'=>'WAS'
 }
 
+
+
 # class PlayerGame
 #   attr_accessor 
 #         :name, 
@@ -87,8 +89,6 @@ $team_codes={
 #   def turn_page
 #     puts "Flipping the page...wow, you read fast!"
 #   end
-
-
 
 #takes a game object- and finds the approproate URL and scrapes tables for box teams
 def get_boxscores(game)

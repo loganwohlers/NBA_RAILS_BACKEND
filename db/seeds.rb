@@ -38,6 +38,11 @@ $team_codes={
     'Utah Jazz'=>'UTA',
     'Washington Wizards'=>'WAS'
 }
+NbaSeason.destroy_all
+
+$team_codes.each do |k,v|
+    NbaTeam.create(name: k, code: v)
+end
 
 
 test_season=NbaSeason.create(year: 2018, description: '2017-2018 NBA Season')

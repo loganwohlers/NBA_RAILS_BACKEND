@@ -1,3 +1,3 @@
 class NbaGame < ApplicationRecord
-    belongs_to: nba_season
+    belongs_to :nba_season
 end
