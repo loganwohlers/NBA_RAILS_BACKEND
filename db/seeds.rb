@@ -136,72 +136,26 @@ def get_players(season)
         end
 end
 
-def get_boxscores(game)
-    mechanize=Mechanize.new
-    code=game['code']
-    #home/away team 3 Letter Code
-    away=$team_codes[game['visitor_team_name']]
-    home=$team_codes[game['home_team_name']]
-    scores={}
-    scores['code']=code
-    scores['away_code']=away
-    scores['home_code']=home
+# def get_boxscores(game)
+#     mechanize=Mechanize.new
+#     # code=game['code']
+#     #home/away team 3 Letter Code
+#     away=$team_codes[game['visitor_team_name']]
+#     home=$team_codes[game['home_team_name']]
+#     scores={}
+#     # scores['code']=code
+#     scores['away_code']=away
+#     scores['home_code']=home
 
-    input='https://www.basketball-reference.com/boxscores/'+ code +'.html'
-    # binding.pry
-    scores[away]=get_team_boxscore(away, input, mechanize)
-    scores[home]=get_team_boxscore(home, input, mechanize)
+#     input='https://www.basketball-reference.com/boxscores/'+ code +'.html'
+
+#     scores[away]=get_team_boxscore(away, input, mechanize, game)
+#     scores[home]=get_team_boxscore(home, input, mechanize, game)
     
-    return scores
-end
+#     return scores
+# end
 
-def get_team_boxscore(team, url, mechanize)
-    puts team
-    puts 'checking ' + team
-    page=mechanize.get(url)
-    table_id='#box_'+team.downcase+'_basic'
-    table = page.at(table_id)
-    players=[]
-    stats=[]
-    table.search('tr').each do |tr|
-        headers = tr.search('th')
-        headers.each do |hh|
-            text = hh.text.strip
-            # //getting all player names
-            if(
-                (text!="Basic Box Score Stats") && (text!="Starters") &&
-                (text!="Reserves") &&
-                (text!="Team Totals") &&
-                (text.length > 5)
-            )
-                players.push(text)
-            end
-        end
-        cells = tr.search('td')
-        row={}
-        # get all player data
-        cells.each do |cell|
-            stat_name = cell.attr('data-stat')
-            # puts cell.search('data-stat')
-            text = cell.text.strip
-            row[stat_name]=text 
-            # puts CSV.generate_line(cells)
-        end
-        # filter empty rows
-        if(row.length>0)
-            stats.push(row)
-        end
-    end
-    # remove team totals from stats
-    stats.pop()
-    # map players to their stats
-    mapped = {}
-    for x in 0..players.length-1
-        mapped[players[x]]=stats[x]
-    end
 
-    return mapped
-end
 
 
 
@@ -242,11 +196,7 @@ def schedule_check(season)
                 if (!row.blank?)
                     home_team=NbaTeam.find_by(name: row['home_team_name'])
                     away_team=NbaTeam.find_by(name: row['visitor_team_name'])
-                    p home_team.name
-                    p 'vs'
-                    p row['visitor_team_name']
-                    p away_team.name
-                    puts
+                    
                     NbaGame.create(
                         code: row['code'],
                         date: row['date_game'],
@@ -304,6 +254,60 @@ def all_boxscores(games)
 end
 
 
+def get_team_boxscore(game)  
+    team=NbaTeam.find(game.home_team_id)
+    puts team.name
+
+    url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
+    p url
+    #  THIS IS THE TEAM CODE
+    mechanize=Mechanize.new
+    page=mechanize.get(url)
+    table_id='#box_'+team.code.downcase+'_basic'
+    table = page.at(table_id)
+    players=[]
+    stats=[]
+    table.search('tr').each do |tr|
+        headers = tr.search('th')
+        headers.each do |hh|
+            text = hh.text.strip
+            # //getting all player names
+            if(
+                (text!="Basic Box Score Stats") && (text!="Starters") &&
+                (text!="Reserves") &&
+                (text!="Team Totals") &&
+                (text.length > 5)
+            )
+                players.push(text)
+            end
+        end
+        cells = tr.search('td')
+        row={}
+        # get all player data
+        cells.each do |cell|
+            stat_name = cell.attr('data-stat')
+            text = cell.text.strip
+            row[stat_name]=text 
+        end
+        # filter empty rows
+        if(row.length>0)
+            stats.push(row)
+        end
+    end
+    # remove team totals from stats
+    stats.pop()
+    # map players to their stats
+    mapped = {}
+    for x in 0..players.length-1
+        mapped[players[x]]=stats[x]
+    end
+
+    #could create the Line here
+    p mapped
+    return mapped
+end
+
+
 
 ##################################
 
@@ -324,7 +328,11 @@ end
 
     test_schedule=schedule_check(test_season.year)
 
-   
+    opener=NbaGame.first
+    get_team_boxscore(opener)
+
+#    <NbaGame id: 327, code: "201710170CLE", date: "Tue, Oct 17, 2017", start_time: "8:01p", home_team_id: 756, away_team_id: 752, home_pts: 102, away_pts: 99, created_at: "2019-05-15 17:45:15", updated_at: "2019-05-15 17:45:15", nba_season_id: 26>
+# 2.6.1 :002 > exit
 
  
 
