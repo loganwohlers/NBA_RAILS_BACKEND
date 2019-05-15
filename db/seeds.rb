@@ -44,26 +44,38 @@ NbaSeason.destroy_all
 NbaTeam.destroy_all
 Player.destroy_all
 PlayerSeason.destroy_all
+NbaGame.destroy_all
 
 
 
 #all this does right now is get the official nba tricode 
 #they don't really need a season but just in-case expansion teams added
-def get_teams(season)
-    team_url='http://data.nba.net/10s/prod/v1/'+(season-1).to_s+'/teams.json'
-    team_string = RestClient.get(team_url)
-    team_data=JSON.parse(team_string)['league']['standard']
-    team_data.each do |team|
-        if(team['isNBAFranchise'])
-            fullname=team['fullName']
-            NbaTeam.create(
-                name: fullname,
-                code: $team_codes[fullname],
-                nba_tricode: team['tricode']
+# def get_teams(season)
+#     team_url='http://data.nba.net/10s/prod/v1/'+(season-1).to_s+'/teams.json'
+#     team_string = RestClient.get(team_url)
+#     team_data=JSON.parse(team_string)['league']['standard']
+#     team_data.each do |team|
+#         if(team['isNBAFranchise'])
+#             fullname=team['fullName']
+#             NbaTeam.create(
+#                 name: fullname,
+#                 code: $team_codes[fullname],
+#                 nba_tricode: team['tricode']
+#             )
+#         end
+#     end
+# end
+
+def get_teams_2
+    $team_codes.each do |k,v|
+        NbaTeam.create(
+                name: k,
+                code: v,
+                nba_tricode: v
             )
-        end
     end
 end
+
 
 
 
@@ -195,9 +207,11 @@ end
 
 def schedule_check(season)
     # months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
-
     #just testing one month to start
     months=['october']
+
+    test_season=NbaSeason.find_by(year: season)
+
     schedule=[]
     mechanize=Mechanize.new
     months.each do |month|
@@ -226,11 +240,45 @@ def schedule_check(season)
                     # end
                 end
                 if (!row.blank?)
-                    row['season']=season
-                    #at this point the row is a 'game' so we can go grab it's boxscore
-                    box=get_boxscores(row)
-                    row['boxscore']=box
-                    schedule.push(row)
+                    home_team=NbaTeam.find_by(name: row['home_team_name'])
+                    away_team=NbaTeam.find_by(name: row['visitor_team_name'])
+                    p home_team.name
+                    p 'vs'
+                    p row['visitor_team_name']
+                    p away_team.name
+                    puts
+                    NbaGame.create(
+                        code: row['code'],
+                        date: row['date_game'],
+                        start_time: row['game_start_time'],
+                        nba_season_id: test_season.id,
+                        home_team_id: home_team.id,
+                        away_team_id: away_team.id,
+                        home_pts: row['home_pts'],
+                        away_pts: row['visitor_pts'] 
+                    )
+                    # puts row
+
+                    #  {"code"=>"201710310MIL", "date_game"=>"Tue, Oct 31, 2017", "game_start_time"=>"8:00p", "visitor_team_name"=>"Oklahoma City Thunder", "visitor_pts"=>"110", "home_team_name"=>"Milwaukee Bucks", "home_pts"=>"91", "box_score_text"=>"Box Score", "overtimes"=>"", "attendance"=>"16,713", "game_remarks"=>""}
+                    # row['season']=season
+                    # #at this point the row is a 'game' so we can go grab it's boxscore
+                    # box=get_boxscores(row)
+                    # row['boxscore']=box
+                    # schedule.push(row)
+
+                     # def change
+                        # create_table :nba_games do |t|
+                        #   t.string :code
+                        #   t.string :date
+                        #   t.string :start_time
+                        #   t.references :nba_season
+                        #   t.integer :home_team_id
+                        #   t.integer :away_team_id
+                        #   t.integer :home_pts
+                        #   t.integer :away_pts
+
+                        #   t.timestamps
+                        # end
 
                     #here is where we would get the boxscore in the seeds
                 else
@@ -249,7 +297,6 @@ end
 def all_boxscores(games)
     all_boxscores=[]
     games.each do |game|
-        puts game['code']
         scores= get_boxscores(game)
         all_boxscores.push(scores)
     end
@@ -266,23 +313,22 @@ end
     test_season=NbaSeason.create(year: season, description: '2017-2018 NBA Season')
 
     #seed the teams for a given season
-    get_teams(test_season.year)
-
+    # get_teams(test_season.year)
+    get_teams_2
+    
     #get all theplayers/player seasons
     # get_players(test_season.year)
 
     team1=NbaTeam.first
     team2=NbaTeam.last
-    
-    p test_season
-    p team1
-    p team2
 
-    NbaGame.create!(
-        nba_season_id: test_season.id,
-        home_team_id: team1.id,
-        away_team_id: team2.id
-    )
+    test_schedule=schedule_check(test_season.year)
+
+   
+
+ 
+
+   
 
 
     # schedule_check(test_season.year)
