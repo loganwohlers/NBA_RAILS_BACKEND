@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_190841) do
+ActiveRecord::Schema.define(version: 2019_05_15_203513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "game_lines", force: :cascade do |t|
-    t.integer "nba_season_id"
     t.integer "player_season_id"
     t.string "mp"
     t.string "fg"
@@ -42,6 +41,7 @@ ActiveRecord::Schema.define(version: 2019_05_15_190841) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "dnp"
+    t.integer "nba_game_id"
   end
 
   create_table "nba_games", force: :cascade do |t|

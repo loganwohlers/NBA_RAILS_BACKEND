@@ -292,13 +292,13 @@ def get_team_boxscore(game)
     
         if !gameline[1]['mp']
             GameLine.create!(
-                nba_season_id: game.nba_season.id,
+                nba_game_id: game.id,
                 player_season_id: ps.id,
                 dnp: true
             )       
         else
             GameLine.create!(
-                nba_season_id: game.nba_season.id,
+                nba_game_id: game.id,
                 player_season_id: ps.id,
                 mp: gameline[1]['mp'], 
                 fg:  gameline[1]['fg'],    
