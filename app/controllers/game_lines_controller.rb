@@ -1,0 +1,2 @@
+class GameLinesController < ApplicationController
+end

@@ -45,6 +45,7 @@ NbaTeam.destroy_all
 Player.destroy_all
 PlayerSeason.destroy_all
 NbaGame.destroy_all
+GameLine.destroy_all
 
 
 
@@ -207,28 +208,7 @@ def schedule_check(season)
                         home_pts: row['home_pts'],
                         away_pts: row['visitor_pts'] 
                     )
-                    # puts row
-
-                    #  {"code"=>"201710310MIL", "date_game"=>"Tue, Oct 31, 2017", "game_start_time"=>"8:00p", "visitor_team_name"=>"Oklahoma City Thunder", "visitor_pts"=>"110", "home_team_name"=>"Milwaukee Bucks", "home_pts"=>"91", "box_score_text"=>"Box Score", "overtimes"=>"", "attendance"=>"16,713", "game_remarks"=>""}
-                    # row['season']=season
-                    # #at this point the row is a 'game' so we can go grab it's boxscore
-                    # box=get_boxscores(row)
-                    # row['boxscore']=box
-                    # schedule.push(row)
-
-                     # def change
-                        # create_table :nba_games do |t|
-                        #   t.string :code
-                        #   t.string :date
-                        #   t.string :start_time
-                        #   t.references :nba_season
-                        #   t.integer :home_team_id
-                        #   t.integer :away_team_id
-                        #   t.integer :home_pts
-                        #   t.integer :away_pts
-
-                        #   t.timestamps
-                        # end
+                    
 
                     #here is where we would get the boxscore in the seeds
                 else
@@ -302,15 +282,57 @@ def get_team_boxscore(game)
         mapped[players[x]]=stats[x]
     end
 
-    #could create the Line here
-    p mapped
-    return mapped
+    #could create the Line here--loop thru mapped and make a game line w/ playerseason/game/box
+    mapped.each do |gameline|
+        player=Player.find_by(name: gameline[0])
+        ps=PlayerSeason.find_by(player_id: player.id)
+        p player.name
+   
+        p gameline[1]['plus_minus']
+    
+        if !gameline[1]['mp']
+            GameLine.create!(
+                nba_season_id: game.nba_season.id,
+                player_season_id: ps.id,
+                dnp: true
+            )       
+        else
+            GameLine.create!(
+                nba_season_id: game.nba_season.id,
+                player_season_id: ps.id,
+                mp: gameline[1]['mp'], 
+                fg:  gameline[1]['fg'],    
+                fga: gameline[1]['fga'],     
+                fg_pct: gameline[1]['fg_pct'],      
+                fg3: gameline[1]['fg3'],    
+                fg3a: gameline[1]['fg3a'],      
+                fg3_pct: gameline[1]['fg3_pct'],      
+                ft: gameline[1]['ft'],      
+                fta: gameline[1]['fta'],      
+                ft_pct: gameline[1]['ft_pct'],     
+                orb: gameline[1]['orb'],     
+                drb: gameline[1]['drb'],     
+                trb: gameline[1]['trb'],     
+                ast: gameline[1]['ast'],     
+                stl: gameline[1]['stl'],     
+                blk: gameline[1]['blk'],     
+                tov: gameline[1]['tov'],     
+                pf: gameline[1]['pf'],     
+                pts: gameline[1]['pts'], 
+                plus_minus: gameline[1]['plus_minus'], 
+                dnp: false    
+                )
+        
+                
+        end
+    end  
+        return mapped
 end
-
-
-
-##################################
-
+        
+        
+        
+        ##################################
+        
     season=2018
 
     #create current season
@@ -321,7 +343,7 @@ end
     get_teams_2
     
     #get all theplayers/player seasons
-    # get_players(test_season.year)
+    get_players(test_season.year)
 
     team1=NbaTeam.first
     team2=NbaTeam.last
@@ -330,13 +352,8 @@ end
 
     opener=NbaGame.first
     get_team_boxscore(opener)
+    p GameLine.all
 
-#    <NbaGame id: 327, code: "201710170CLE", date: "Tue, Oct 17, 2017", start_time: "8:01p", home_team_id: 756, away_team_id: 752, home_pts: 102, away_pts: 99, created_at: "2019-05-15 17:45:15", updated_at: "2019-05-15 17:45:15", nba_season_id: 26>
-# 2.6.1 :002 > exit
-
- 
-
-   
 
 
     # schedule_check(test_season.year)

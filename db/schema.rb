@@ -10,10 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_170131) do
+ActiveRecord::Schema.define(version: 2019_05_15_190841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "game_lines", force: :cascade do |t|
+    t.integer "nba_season_id"
+    t.integer "player_season_id"
+    t.string "mp"
+    t.string "fg"
+    t.string "fga"
+    t.string "fg_pct"
+    t.string "fg3"
+    t.string "fg3a"
+    t.string "fg3_pct"
+    t.string "efg_pct"
+    t.string "ft"
+    t.string "fta"
+    t.string "ft_pct"
+    t.string "orb"
+    t.string "drb"
+    t.string "trb"
+    t.string "ast"
+    t.string "stl"
+    t.string "blk"
+    t.string "tov"
+    t.string "pf"
+    t.string "pts"
+    t.string "plus_minus"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "dnp"
+  end
 
   create_table "nba_games", force: :cascade do |t|
     t.string "code"
