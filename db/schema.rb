@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_220740) do
 
   create_table "player_seasons", force: :cascade do |t|
     t.integer "player_id"
-    t.integer "season_id"
+    t.integer "nba_season_id"
     t.string "age"
     t.string "mp_per_g"
     t.string "fg_per_g"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_220740) do
 
   create_table "players", force: :cascade do |t|
     t.string "name"
-    t.integer "team_id"
+    t.integer "nba_team_id"
     t.string "position"
     t.boolean "out"
     t.datetime "created_at", null: false

@@ -71,7 +71,9 @@ test_season=NbaSeason.create(year: season, description: '2017-2018 NBA Season')
 
 #get all players for a season-- currently it also grabs season avg's but those aren't being used as of now
 def get_players(season)
+
     test_season=NbaSeason.find_by(year: season)
+
     player_url='https://www.basketball-reference.com/leagues/NBA_'+season.to_s+'_per_game.html'
     mechanize=Mechanize.new
     player_page=mechanize.get(player_url)
@@ -93,35 +95,36 @@ def get_players(season)
                 p test_season.id
                 currPlayer=Player.create(
                     name: row['player'],
-                    team_id: team.id,
+                    nba_team_id: team.id,
                     position: row['position'],
                     out: false 
                 )  
-                
-                
-                # PlayerSeason.create(
-                #     season_id: test_season.id,
-                #     player_id: pp.id,
-                #     mp_per_g: row['mp_per_g'], 
-                #     fg_per_g:  row['fg_per_g'],    
-                #     fga_per_g: row['fga_per_g'],     
-                #     fg_pct: row['fg_pct'],      
-                #     fg3_per_g: row['fg3_per_g'],    
-                #     fg3a_per_g: row['fg3a_per_g'],      
-                #     fg3_pct: row['fg3_pct'],      
-                #     efg_pct: row['efg_pct'],     
-                #     ft_per_g: row['ft_per_g'],      
-                #     fta_per_g: row['fta_per_g'],      
-                #     ft_pct: row['ft_pct'],     
-                #     orb_per_g: row['orb_per_g'],     
-                #     drb_per_g: row['drb_per_g'],     
-                #     ast_per_g: row['ast_per_g'],     
-                #     stl_per_g: row['stl_per_g'],     
-                #     blk_per_g: row['blk_per_g'],     
-                #     tov_per_g: row['tov_per_g'],     
-                #     pf_per_g: row['pf_per_g'],     
-                #     pts_per_g: row['pts_per_g'],     
-                # )  
+                #ISSUE WAS THAT NBA_SEASON AND SEASON WERE NOT LINED UP-- MUST BE NAMED THE SAME
+
+                # Not currently working fix tomorrow
+                PlayerSeason.create!(
+                    nba_season_id: test_season.id,
+                    player_id: currPlayer.id,
+                    mp_per_g: row['mp_per_g'], 
+                    fg_per_g:  row['fg_per_g'],    
+                    fga_per_g: row['fga_per_g'],     
+                    fg_pct: row['fg_pct'],      
+                    fg3_per_g: row['fg3_per_g'],    
+                    fg3a_per_g: row['fg3a_per_g'],      
+                    fg3_pct: row['fg3_pct'],      
+                    efg_pct: row['efg_pct'],     
+                    ft_per_g: row['ft_per_g'],      
+                    fta_per_g: row['fta_per_g'],      
+                    ft_pct: row['ft_pct'],     
+                    orb_per_g: row['orb_per_g'],     
+                    drb_per_g: row['drb_per_g'],     
+                    ast_per_g: row['ast_per_g'],     
+                    stl_per_g: row['stl_per_g'],     
+                    blk_per_g: row['blk_per_g'],     
+                    tov_per_g: row['tov_per_g'],     
+                    pf_per_g: row['pf_per_g'],     
+                    pts_per_g: row['pts_per_g'],     
+                )  
             end
         end
     end
