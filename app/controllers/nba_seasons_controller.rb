@@ -1,2 +1,0 @@
-class NbaSeasonsController < ApplicationController
-end

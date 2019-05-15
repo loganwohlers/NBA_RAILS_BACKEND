@@ -1,2 +1,0 @@
-class NbaGamesController < ApplicationController
-end

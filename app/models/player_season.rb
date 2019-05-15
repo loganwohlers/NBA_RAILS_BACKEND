@@ -1,5 +1,5 @@
 class PlayerSeason < ApplicationRecord
     belongs_to :player
-    belongs_to :nba_season
+    belongs_to :season
     has_many :gamelines
 end

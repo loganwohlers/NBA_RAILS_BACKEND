@@ -1,2 +1,0 @@
-class NbaPlayersController < ApplicationController
-end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_203513) do
+ActiveRecord::Schema.define(version: 2019_05_15_224804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 2019_05_15_203513) do
     t.string "fg3"
     t.string "fg3a"
     t.string "fg3_pct"
-    t.string "efg_pct"
     t.string "ft"
     t.string "fta"
     t.string "ft_pct"
@@ -41,10 +40,10 @@ ActiveRecord::Schema.define(version: 2019_05_15_203513) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "dnp"
-    t.integer "nba_game_id"
+    t.integer "game_id"
   end
 
-  create_table "nba_games", force: :cascade do |t|
+  create_table "games", force: :cascade do |t|
     t.string "code"
     t.string "date"
     t.string "start_time"
@@ -54,7 +53,7 @@ ActiveRecord::Schema.define(version: 2019_05_15_203513) do
     t.integer "away_pts"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "nba_season_id"
+    t.integer "season_id"
   end
 
   create_table "nba_players", force: :cascade do |t|
@@ -63,24 +62,8 @@ ActiveRecord::Schema.define(version: 2019_05_15_203513) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "nba_seasons", force: :cascade do |t|
-    t.integer "year"
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "nba_teams", force: :cascade do |t|
-    t.string "name"
-    t.string "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "nba_tricode"
-  end
-
   create_table "player_seasons", force: :cascade do |t|
     t.integer "player_id"
-    t.integer "nba_season_id"
     t.string "age"
     t.string "mp_per_g"
     t.string "fg_per_g"
@@ -101,15 +84,31 @@ ActiveRecord::Schema.define(version: 2019_05_15_203513) do
     t.string "tov_per_g"
     t.string "pf_per_g"
     t.string "pts_per_g"
+    t.integer "season_id"
   end
 
   create_table "players", force: :cascade do |t|
     t.string "name"
-    t.integer "nba_team_id"
     t.string "position"
     t.boolean "out"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "team_id"
+  end
+
+  create_table "seasons", force: :cascade do |t|
+    t.integer "year"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "nba_tricode"
   end
 
 end

@@ -40,11 +40,11 @@ $team_codes={
     'Utah Jazz'=>'UTA',
     'Washington Wizards'=>'WAS'
 }
-NbaSeason.destroy_all
-NbaTeam.destroy_all
+Season.destroy_all
+Team.destroy_all
 Player.destroy_all
 PlayerSeason.destroy_all
-NbaGame.destroy_all
+Game.destroy_all
 GameLine.destroy_all
 
 
@@ -58,7 +58,7 @@ GameLine.destroy_all
 #     team_data.each do |team|
 #         if(team['isNBAFranchise'])
 #             fullname=team['fullName']
-#             NbaTeam.create(
+#             Team.create(
 #                 name: fullname,
 #                 code: $team_codes[fullname],
 #                 nba_tricode: team['tricode']
@@ -69,7 +69,7 @@ GameLine.destroy_all
 
 def get_teams_2
     $team_codes.each do |k,v|
-        NbaTeam.create(
+        Team.create(
                 name: k,
                 code: v,
                 nba_tricode: v
@@ -82,7 +82,7 @@ end
 
 #get all players for a season-- and their season avgs
 def get_players(season)
-    test_season=NbaSeason.find_by(year: season)
+    test_season=Season.find_by(year: season)
     player_url='https://www.basketball-reference.com/leagues/NBA_'+season.to_s+'_per_game.html'
     mechanize=Mechanize.new
     player_page=mechanize.get(player_url)
@@ -98,11 +98,11 @@ def get_players(season)
             row[stat_name]=text 
         end
         if(row.length>0)
-            team= NbaTeam.find_by(code: row['team_id'])
+            team= Team.find_by(code: row['team_id'])
             if (team)
                 currPlayer=Player.find_or_create_by(
                     name: row['player'],
-                    nba_team_id: team.id,
+                    team_id: team.id,
                     position: row['position'],
                     out: false 
                     ) 
@@ -110,7 +110,7 @@ def get_players(season)
                     #ISSUE WAS THAT NBA_SEASON AND SEASON WERE NOT LINED UP-- MUST BE NAMED THE SAME
 
                 PlayerSeason.create!(
-                    nba_season_id: test_season.id,
+                    season_id: test_season.id,
                     player_id: currPlayer.id,
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
@@ -165,7 +165,7 @@ def schedule_check(season)
     #just testing one month to start
     months=['october']
 
-    test_season=NbaSeason.find_by(year: season)
+    test_season=Season.find_by(year: season)
 
     schedule=[]
     mechanize=Mechanize.new
@@ -195,14 +195,14 @@ def schedule_check(season)
                     # end
                 end
                 if (!row.blank?)
-                    home_team=NbaTeam.find_by(name: row['home_team_name'])
-                    away_team=NbaTeam.find_by(name: row['visitor_team_name'])
+                    home_team=Team.find_by(name: row['home_team_name'])
+                    away_team=Team.find_by(name: row['visitor_team_name'])
                     
-                    NbaGame.create(
+                    Game.create(
                         code: row['code'],
                         date: row['date_game'],
                         start_time: row['game_start_time'],
-                        nba_season_id: test_season.id,
+                        season_id: test_season.id,
                         home_team_id: home_team.id,
                         away_team_id: away_team.id,
                         home_pts: row['home_pts'],
@@ -235,7 +235,7 @@ end
 
 
 def get_team_boxscore(game)  
-    team=NbaTeam.find(game.home_team_id)
+    team=Team.find(game.home_team_id)
     puts team.name
 
     url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
@@ -292,13 +292,13 @@ def get_team_boxscore(game)
     
         if !gameline[1]['mp']
             GameLine.create!(
-                nba_game_id: game.id,
+                game_id: game.id,
                 player_season_id: ps.id,
                 dnp: true
             )       
         else
             GameLine.create!(
-                nba_game_id: game.id,
+                game_id: game.id,
                 player_season_id: ps.id,
                 mp: gameline[1]['mp'], 
                 fg:  gameline[1]['fg'],    
@@ -336,7 +336,7 @@ end
     season=2018
 
     #create current season
-    test_season=NbaSeason.create(year: season, description: '2017-2018 NBA Season')
+    test_season=Season.create(year: season, description: '2017-2018 NBA Season')
 
     #seed the teams for a given season
     # get_teams(test_season.year)
@@ -345,506 +345,11 @@ end
     #get all theplayers/player seasons
     get_players(test_season.year)
 
-    team1=NbaTeam.first
-    team2=NbaTeam.last
+    team1=Team.first
+    team2=Team.last
 
     test_schedule=schedule_check(test_season.year)
 
-    opener=NbaGame.first
+    opener=Game.first
     get_team_boxscore(opener)
     p GameLine.all
-
-
-
-    # schedule_check(test_season.year)
-
-
-#     {
-#   "code": "201710170CLE",
-#   "date_game": "Tue, Oct 17, 2017",
-#   "game_start_time": "8:01p",
-#   "visitor_team_name": "Boston Celtics",
-#   "visitor_pts": "99",
-#   "home_team_name": "Cleveland Cavaliers",
-#   "home_pts": "102",
-#   "box_score_text": "Box Score",
-#   "overtimes": "",
-#   "attendance": "20,562",
-#   "game_remarks": "",
-#   "season": 2018,
-#   "boxscore": {
-#     "code": "201710170CLE",
-#     "away_code": "BOS",
-#     "home_code": "CLE",
-#     "BOS": {
-#       "Jaylen Brown": {
-#         "mp": "39:36",
-#         "fg": "11",
-#         "fga": "23",
-#         "fg_pct": ".478",
-#         "fg3": "2",
-#         "fg3a": "9",
-#         "fg3_pct": ".222",
-#         "ft": "1",
-#         "fta": "2",
-#         "ft_pct": ".500",
-#         "orb": "1",
-#         "drb": "5",
-#         "trb": "6",
-#         "ast": "0",
-#         "stl": "2",
-#         "blk": "0",
-#         "tov": "3",
-#         "pf": "5",
-#         "pts": "25",
-#         "plus_minus": "-5"
-#       },
-#       "Kyrie Irving": {
-#         "mp": "39:21",
-#         "fg": "8",
-#         "fga": "17",
-#         "fg_pct": ".471",
-#         "fg3": "4",
-#         "fg3a": "9",
-#         "fg3_pct": ".444",
-#         "ft": "2",
-#         "fta": "2",
-#         "ft_pct": "1.000",
-#         "orb": "2",
-#         "drb": "2",
-#         "trb": "4",
-#         "ast": "10",
-#         "stl": "3",
-#         "blk": "0",
-#         "tov": "2",
-#         "pf": "4",
-#         "pts": "22",
-#         "plus_minus": "-1"
-#       },
-#       "Jayson Tatum": {
-#         "mp": "36:32",
-#         "fg": "5",
-#         "fga": "12",
-#         "fg_pct": ".417",
-#         "fg3": "1",
-#         "fg3a": "2",
-#         "fg3_pct": ".500",
-#         "ft": "3",
-#         "fta": "3",
-#         "ft_pct": "1.000",
-#         "orb": "4",
-#         "drb": "6",
-#         "trb": "10",
-#         "ast": "3",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "1",
-#         "pf": "4",
-#         "pts": "14",
-#         "plus_minus": "+6"
-#       },
-#       "Al Horford": {
-#         "mp": "32:07",
-#         "fg": "2",
-#         "fga": "7",
-#         "fg_pct": ".286",
-#         "fg3": "0",
-#         "fg3a": "2",
-#         "fg3_pct": ".000",
-#         "ft": "5",
-#         "fta": "7",
-#         "ft_pct": ".714",
-#         "orb": "0",
-#         "drb": "7",
-#         "trb": "7",
-#         "ast": "5",
-#         "stl": "0",
-#         "blk": "1",
-#         "tov": "0",
-#         "pf": "2",
-#         "pts": "9",
-#         "plus_minus": "+8"
-#       },
-#       "Gordon Hayward": {
-#         "mp": "5:15",
-#         "fg": "1",
-#         "fga": "2",
-#         "fg_pct": ".500",
-#         "fg3": "0",
-#         "fg3a": "1",
-#         "fg3_pct": ".000",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "0",
-#         "drb": "1",
-#         "trb": "1",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "1",
-#         "pts": "2",
-#         "plus_minus": "+3"
-#       },
-#       "Marcus Smart": {
-#         "mp": "35:03",
-#         "fg": "5",
-#         "fga": "16",
-#         "fg_pct": ".313",
-#         "fg3": "0",
-#         "fg3a": "4",
-#         "fg3_pct": ".000",
-#         "ft": "2",
-#         "fta": "3",
-#         "ft_pct": ".667",
-#         "orb": "0",
-#         "drb": "9",
-#         "trb": "9",
-#         "ast": "3",
-#         "stl": "2",
-#         "blk": "2",
-#         "tov": "2",
-#         "pf": "2",
-#         "pts": "12",
-#         "plus_minus": "-8"
-#       },
-#       "Terry Rozier": {
-#         "mp": "19:32",
-#         "fg": "2",
-#         "fga": "6",
-#         "fg_pct": ".333",
-#         "fg3": "1",
-#         "fg3a": "3",
-#         "fg3_pct": ".333",
-#         "ft": "4",
-#         "fta": "4",
-#         "ft_pct": "1.000",
-#         "orb": "0",
-#         "drb": "3",
-#         "trb": "3",
-#         "ast": "2",
-#         "stl": "4",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "0",
-#         "pts": "9",
-#         "plus_minus": "+4"
-#       },
-#       "Aron Baynes": {
-#         "mp": "19:06",
-#         "fg": "2",
-#         "fga": "2",
-#         "fg_pct": "1.000",
-#         "fg3": "0",
-#         "fg3a": "0",
-#         "fg3_pct": "",
-#         "ft": "2",
-#         "fta": "4",
-#         "ft_pct": ".500",
-#         "orb": "2",
-#         "drb": "3",
-#         "trb": "5",
-#         "ast": "1",
-#         "stl": "0",
-#         "blk": "1",
-#         "tov": "2",
-#         "pf": "5",
-#         "pts": "6",
-#         "plus_minus": "-14"
-#       },
-#       "Semi Ojeleye": {
-#         "mp": "8:39",
-#         "fg": "0",
-#         "fga": "2",
-#         "fg_pct": ".000",
-#         "fg3": "0",
-#         "fg3a": "1",
-#         "fg3_pct": ".000",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "0",
-#         "drb": "0",
-#         "trb": "0",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "1",
-#         "pts": "0",
-#         "plus_minus": "-10"
-#       },
-#       "Shane Larkin": {
-#         "mp": "4:49",
-#         "fg": "0",
-#         "fga": "1",
-#         "fg_pct": ".000",
-#         "fg3": "0",
-#         "fg3a": "1",
-#         "fg3_pct": ".000",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "0",
-#         "drb": "1",
-#         "trb": "1",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "0",
-#         "pts": "0",
-#         "plus_minus": "+2"
-#       },
-#       "Abdel Nader": {
-#         "reason": "Did Not Play"
-#       },
-#       "Daniel Theis": {
-#         "reason": "Did Not Play"
-#       }
-#     },
-#     "CLE": {
-#       "LeBron James": {
-#         "mp": "41:12",
-#         "fg": "12",
-#         "fga": "19",
-#         "fg_pct": ".632",
-#         "fg3": "1",
-#         "fg3a": "5",
-#         "fg3_pct": ".200",
-#         "ft": "4",
-#         "fta": "4",
-#         "ft_pct": "1.000",
-#         "orb": "1",
-#         "drb": "15",
-#         "trb": "16",
-#         "ast": "9",
-#         "stl": "0",
-#         "blk": "2",
-#         "tov": "4",
-#         "pf": "3",
-#         "pts": "29",
-#         "plus_minus": "+2"
-#       },
-#       "Jae Crowder": {
-#         "mp": "34:44",
-#         "fg": "3",
-#         "fga": "10",
-#         "fg_pct": ".300",
-#         "fg3": "1",
-#         "fg3a": "5",
-#         "fg3_pct": ".200",
-#         "ft": "4",
-#         "fta": "4",
-#         "ft_pct": "1.000",
-#         "orb": "1",
-#         "drb": "4",
-#         "trb": "5",
-#         "ast": "2",
-#         "stl": "2",
-#         "blk": "0",
-#         "tov": "1",
-#         "pf": "2",
-#         "pts": "11",
-#         "plus_minus": "+7"
-#       },
-#       "Derrick Rose": {
-#         "mp": "31:15",
-#         "fg": "5",
-#         "fga": "14",
-#         "fg_pct": ".357",
-#         "fg3": "1",
-#         "fg3a": "3",
-#         "fg3_pct": ".333",
-#         "ft": "3",
-#         "fta": "4",
-#         "ft_pct": ".750",
-#         "orb": "1",
-#         "drb": "3",
-#         "trb": "4",
-#         "ast": "2",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "2",
-#         "pf": "2",
-#         "pts": "14",
-#         "plus_minus": "-7"
-#       },
-#       "Dwyane Wade": {
-#         "mp": "28:30",
-#         "fg": "3",
-#         "fga": "10",
-#         "fg_pct": ".300",
-#         "fg3": "0",
-#         "fg3a": "1",
-#         "fg3_pct": ".000",
-#         "ft": "2",
-#         "fta": "2",
-#         "ft_pct": "1.000",
-#         "orb": "1",
-#         "drb": "1",
-#         "trb": "2",
-#         "ast": "3",
-#         "stl": "0",
-#         "blk": "2",
-#         "tov": "4",
-#         "pf": "1",
-#         "pts": "8",
-#         "plus_minus": "0"
-#       },
-#       "Kevin Love": {
-#         "mp": "28:24",
-#         "fg": "4",
-#         "fga": "9",
-#         "fg_pct": ".444",
-#         "fg3": "1",
-#         "fg3a": "4",
-#         "fg3_pct": ".250",
-#         "ft": "6",
-#         "fta": "7",
-#         "ft_pct": ".857",
-#         "orb": "3",
-#         "drb": "8",
-#         "trb": "11",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "2",
-#         "pf": "2",
-#         "pts": "15",
-#         "plus_minus": "+1"
-#       },
-#       "J.R. Smith": {
-#         "mp": "21:55",
-#         "fg": "4",
-#         "fga": "7",
-#         "fg_pct": ".571",
-#         "fg3": "1",
-#         "fg3a": "3",
-#         "fg3_pct": ".333",
-#         "ft": "1",
-#         "fta": "1",
-#         "ft_pct": "1.000",
-#         "orb": "0",
-#         "drb": "4",
-#         "trb": "4",
-#         "ast": "1",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "4",
-#         "pts": "10",
-#         "plus_minus": "+7"
-#       },
-#       "Tristan Thompson": {
-#         "mp": "19:36",
-#         "fg": "2",
-#         "fga": "3",
-#         "fg_pct": ".667",
-#         "fg3": "0",
-#         "fg3a": "0",
-#         "fg3_pct": "",
-#         "ft": "1",
-#         "fta": "3",
-#         "ft_pct": ".333",
-#         "orb": "1",
-#         "drb": "5",
-#         "trb": "6",
-#         "ast": "2",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "2",
-#         "pf": "3",
-#         "pts": "5",
-#         "plus_minus": "+2"
-#       },
-#       "Jeff Green": {
-#         "mp": "14:14",
-#         "fg": "3",
-#         "fga": "8",
-#         "fg_pct": ".375",
-#         "fg3": "0",
-#         "fg3a": "1",
-#         "fg3_pct": ".000",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "0",
-#         "drb": "0",
-#         "trb": "0",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "1",
-#         "pf": "3",
-#         "pts": "6",
-#         "plus_minus": "-2"
-#       },
-#       "Iman Shumpert": {
-#         "mp": "12:51",
-#         "fg": "2",
-#         "fga": "3",
-#         "fg_pct": ".667",
-#         "fg3": "0",
-#         "fg3a": "0",
-#         "fg3_pct": "",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "1",
-#         "drb": "1",
-#         "trb": "2",
-#         "ast": "0",
-#         "stl": "1",
-#         "blk": "0",
-#         "tov": "1",
-#         "pf": "3",
-#         "pts": "4",
-#         "plus_minus": "+6"
-#       },
-#       "Kyle Korver": {
-#         "mp": "7:19",
-#         "fg": "0",
-#         "fga": "0",
-#         "fg_pct": "",
-#         "fg3": "0",
-#         "fg3a": "0",
-#         "fg3_pct": "",
-#         "ft": "0",
-#         "fta": "0",
-#         "ft_pct": "",
-#         "orb": "0",
-#         "drb": "0",
-#         "trb": "0",
-#         "ast": "0",
-#         "stl": "0",
-#         "blk": "0",
-#         "tov": "0",
-#         "pf": "2",
-#         "pts": "0",
-#         "plus_minus": "-1"
-#       },
-#       "Cedi Osman": {
-#         "reason": "Did Not Play"
-#       },
-#       "Jose Calderon": {
-#         "reason": "Did Not Play"
-#       },
-#       "Channing Frye": {
-#         "reason": "Did Not Play"
-#       }
-#     }
-#   }
-# }
-    
-    
-    
-    
-    
-    
-    
-
-
-
-

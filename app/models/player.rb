@@ -1,4 +1,4 @@
 class Player < ApplicationRecord
-    belongs_to :nba_team, optional:true
+    belongs_to :team
     has_many :player_seasons
 end
