@@ -268,10 +268,24 @@ end
     #seed the teams for a given season
     get_teams(test_season.year)
 
-    #get players/player seasons
-    get_players(test_season.year)
+    #get all theplayers/player seasons
+    # get_players(test_season.year)
 
-    schedule_check(test_season.year)
+    team1=NbaTeam.first
+    team2=NbaTeam.last
+    
+    p test_season
+    p team1
+    p team2
+
+    NbaGame.create!(
+        nba_season_id: test_season.id,
+        home_team_id: team1.id,
+        away_team_id: team2.id
+    )
+
+
+    # schedule_check(test_season.year)
 
 
 #     {
