@@ -205,21 +205,18 @@ def all_boxscores(games)
     end
     return all_boxscores
 end
-puts 'test'
 
 # schedule=schedule_check
-shortened_schedule=schedule_check(2018)[0]
+shortened_schedule=schedule_check(2018)
 
 # shortened_boxscores=get_boxscores(shortened_schedule)
 # puts shortened_boxscores
 
-# opener= schedule[0]
-# # BOS @ CLEVELAND 10/17
+# BOS @ CLEVELAND 10/17
+opener= shortened_schedule[0]
 # bxs = get_boxscores(opener)
 # puts JSON.pretty_generate(bxs)
-# puts
-# puts JSON.pretty_generate(opener)
+puts
+puts JSON.pretty_generate(opener)
 
-puts JSON.pretty_generate(shortened_schedule)
-puts shortened_schedule['boxscore']['home']
 
