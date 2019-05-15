@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_205036) do
+ActiveRecord::Schema.define(version: 2019_05_14_220740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,16 +43,29 @@ ActiveRecord::Schema.define(version: 2019_05_14_205036) do
     t.string "nba_tricode"
   end
 
-  create_table "nbateams", force: :cascade do |t|
-    t.string "name"
-    t.string "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "player_seasons", force: :cascade do |t|
     t.integer "player_id"
     t.integer "season_id"
+    t.string "age"
+    t.string "mp_per_g"
+    t.string "fg_per_g"
+    t.string "fga_per_g"
+    t.string "fg_pct"
+    t.string "fg3_per_g"
+    t.string "fg3a_per_g"
+    t.string "fg3_pct"
+    t.string "efg_pct"
+    t.string "ft_per_g"
+    t.string "fta_per_g"
+    t.string "ft_pct"
+    t.string "orb_per_g"
+    t.string "drb_per_g"
+    t.string "ast_per_g"
+    t.string "stl_per_g"
+    t.string "blk_per_g"
+    t.string "tov_per_g"
+    t.string "pf_per_g"
+    t.string "pts_per_g"
   end
 
   create_table "players", force: :cascade do |t|

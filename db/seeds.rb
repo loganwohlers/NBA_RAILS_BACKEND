@@ -62,10 +62,6 @@ team_data.each do |team|
     end
 end
 
-p NbaTeam.all
-
-# http://data.nba.net/10s/prod/v1/2017/players.json
-
 #create current season
 test_season=NbaSeason.create(year: season, description: '2017-2018 NBA Season')
 
@@ -75,15 +71,13 @@ test_season=NbaSeason.create(year: season, description: '2017-2018 NBA Season')
 
 #get all players for a season-- currently it also grabs season avg's but those aren't being used as of now
 def get_players(season)
+    test_season=NbaSeason.find_by(year: season)
     player_url='https://www.basketball-reference.com/leagues/NBA_'+season.to_s+'_per_game.html'
     mechanize=Mechanize.new
     player_page=mechanize.get(player_url)
     table_id='#per_game_stats'
     table = player_page.at(table_id)
-    teams=[]
     table.search('tr').each do |tr|
-        # headers = tr.search('th')
-
         cells = tr.search('td')
         row={}
         # get all player data
@@ -92,29 +86,59 @@ def get_players(season)
             text = cell.text.strip
             row[stat_name]=text 
         end
-        # p row
         if(row.length>0)
             team= NbaTeam.find_by(code: row['team_id'])
             if (team)
-                teams.push(team.name)
-                Player.create(
+                p team.id
+                p test_season.id
+                currPlayer=Player.create(
                     name: row['player'],
                     team_id: team.id,
                     position: row['position'],
                     out: false 
-                )
+                )  
+                
+                
+                # PlayerSeason.create(
+                #     season_id: test_season.id,
+                #     player_id: pp.id,
+                #     mp_per_g: row['mp_per_g'], 
+                #     fg_per_g:  row['fg_per_g'],    
+                #     fga_per_g: row['fga_per_g'],     
+                #     fg_pct: row['fg_pct'],      
+                #     fg3_per_g: row['fg3_per_g'],    
+                #     fg3a_per_g: row['fg3a_per_g'],      
+                #     fg3_pct: row['fg3_pct'],      
+                #     efg_pct: row['efg_pct'],     
+                #     ft_per_g: row['ft_per_g'],      
+                #     fta_per_g: row['fta_per_g'],      
+                #     ft_pct: row['ft_pct'],     
+                #     orb_per_g: row['orb_per_g'],     
+                #     drb_per_g: row['drb_per_g'],     
+                #     ast_per_g: row['ast_per_g'],     
+                #     stl_per_g: row['stl_per_g'],     
+                #     blk_per_g: row['blk_per_g'],     
+                #     tov_per_g: row['tov_per_g'],     
+                #     pf_per_g: row['pf_per_g'],     
+                #     pts_per_g: row['pts_per_g'],     
+                # )  
             end
         end
     end
-    # return stats
 end
 
-
+# tt=NbaTeam.first
 get_players(2018)
+# pl=Player.create!(
+#     name: "tester",
+#     team_id: tt.id,
+#     position: "C",
+#     out: false
+# )
 
-Player.all.each do |p|
-    p p.name
-end
+
+
+
 
 
 
