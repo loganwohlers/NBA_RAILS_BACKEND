@@ -1,0 +1,2 @@
+class TeamSeason < ApplicationRecord
+end

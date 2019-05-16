@@ -3,13 +3,22 @@ require_relative 'team_codes'
 
 
 
-#use team codes to creat all 30 teams
+#use team codes to creat all 30 teams- and creates team seasons
 def get_teams
     $team_codes.each do |k,v|
         Team.create(
             name: k,
             code: v,
             nba_tricode: v
+        )
+    end
+end
+
+def get_team_seasons (season)
+    Team.all.each do |team|
+        TeamSeason.create(
+            team_id: team.id,
+            season_id: season.id
         )
     end
 end
