@@ -1,0 +1,21 @@
+  [1m[36mGame Load (2.7ms)[0m  [1m[34mSELECT "games".* FROM "games"[0m
+  [1m[36mGameLine Load (74.1ms)[0m  [1m[34mSELECT "game_lines".* FROM "game_lines"[0m
+  [1m[36mPlayer Load (1.4ms)[0m  [1m[34mSELECT "players".* FROM "players"[0m
+  [1m[36mGame Load (2.2ms)[0m  [1m[34mSELECT "games".* FROM "games"[0m
+  [1m[36mPlayer Load (0.3ms)[0m  [1m[34mSELECT  "players".* FROM "players" ORDER BY "players"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (41.0ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.4ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.4ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.6ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mGameLine Load (0.4ms)[0m  [1m[34mSELECT  "game_lines".* FROM "game_lines" ORDER BY "game_lines"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mPlayer Load (0.5ms)[0m  [1m[34mSELECT  "players".* FROM "players" ORDER BY "players"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.7ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.7ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.6ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mGameLine Load (2.3ms)[0m  [1m[34mSELECT  "game_lines".* FROM "game_lines" WHERE "game_lines"."player_season_id" = $1 LIMIT $2[0m  [["player_season_id", 42398], ["LIMIT", 11]]
+  [1m[36mPlayer Load (0.6ms)[0m  [1m[34mSELECT  "players".* FROM "players" ORDER BY "players"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (1.7ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mGameLine Load (0.7ms)[0m  [1m[34mSELECT  "game_lines".* FROM "game_lines" WHERE "game_lines"."player_season_id" = $1 ORDER BY "game_lines"."id" DESC LIMIT $2[0m  [["player_season_id", 42398], ["LIMIT", 1]]
+  [1m[36mPlayerSeason Load (0.5ms)[0m  [1m[34mSELECT  "player_seasons".* FROM "player_seasons" WHERE "player_seasons"."player_id" = $1 ORDER BY "player_seasons"."id" ASC LIMIT $2[0m  [["player_id", 40096], ["LIMIT", 1]]
+  [1m[36mGameLine Load (0.4ms)[0m  [1m[34mSELECT  "game_lines".* FROM "game_lines" WHERE "game_lines"."player_season_id" = $1 ORDER BY "game_lines"."id" DESC LIMIT $2[0m  [["player_season_id", 42398], ["LIMIT", 1]]
+  [1m[36mGame Load (1.0ms)[0m  [1m[34mSELECT  "games".* FROM "games" WHERE "games"."id" = $1 LIMIT $2[0m  [["id", 12529], ["LIMIT", 1]]
