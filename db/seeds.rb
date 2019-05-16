@@ -9,8 +9,8 @@
 require_relative '../config/environment.rb'
 require_relative '../lib/scrape.rb'
 
-# Team.destroy_all
 #always same 30 teams 
+# Team.destroy_all
 
 Season.destroy_all
 Player.destroy_all
@@ -21,23 +21,10 @@ TeamSeason.destroy_all
     
 ##################################
 
-#seed one season- currently only seeding month of Oct
+# seasons=[2016,2017,2018]
+
+#seed one season
 season=2018
 test_season=Season.create(year: season, description: '2017-2018 NBA Season')
-
 seed_season(test_season)
 
-
-
-
-# gg=Game.find_by(code: '201710180WAS')
-# puts gg.code
-# mechanize=Mechanize.new
-# get_team_boxscore(gg, gg.home_team_id, mechanize)
-# get_team_boxscore(gg, gg.away_team_id, mechanize)
-
-# team1=Team.first
-# team2=Team.last
-# opener=Game.first
-# get_team_boxscore(opener, opener.home_team.team, mechanize )
-# p GameLine.all

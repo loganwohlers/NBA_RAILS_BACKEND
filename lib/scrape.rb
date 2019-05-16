@@ -88,6 +88,7 @@ end
 def get_season_stats(games)
     mechanize=Mechanize.new
     games.each do |game|
+        puts game.code
         get_team_boxscore(game, game.home_team.team, mechanize)
         get_team_boxscore(game, game.away_team.team, mechanize)
     end
@@ -101,26 +102,16 @@ def get_team_boxscore(game, team, mechanize)
     end  
 end
 
+#could all be find or create by?
 def make_gameline(season, team, game, gameline)
-    # going through our map of player/boxscore and creating a gameline
-    #ISSUE w/ players who weren't on that END OF SEASON LIST as they don't exist here
-    #temporary fix but need more uniform way to handle
     ts=TeamSeason.find_by(season_id: season.id, team_id: team.id)
-    player=Player.find_by(name: gameline[0])
-    if(player)
-        ps=PlayerSeason.find_by(
+    player=Player.find_or_create_by(name: gameline[0])
+  
+        ps=PlayerSeason.find_or_create_by(
             player_id: player.id,
             team_season_id: ts.id
         )
-    else
-        pl=Player.create(
-            name: gameline[0],
-        )
-            ps=PlayerSeason.create!(
-                player_id: pl.id,
-                team_season_id: ts.id
-            )
-    end
+
 
     if !gameline[1]['mp']
         GameLine.create!(
@@ -203,20 +194,22 @@ def get_game_box(game, team, mechanize)
 end
 
 
+# just testing one month to start
+# months=['october']
 def get_schedule(season)
-    # months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
-    #just testing one month to start
-    months=['october']
+    months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
     schedule=[]
     mechanize=Mechanize.new
+   
     months.each do |month|
+        p month
         input='https://www.basketball-reference.com/leagues/NBA_'+ season.year.to_s + '_games-' + month + '.html' 
         page=mechanize.get(input)
         schedule_table=page.at('#schedule')
                 
         #this is used to check for the second blank row in the table that only
-        #shows up IN April-- signals start of playoffs 
         count=0;
+        
         schedule_table.search('tr').each do |tr|
             row={}
             th=tr.search('th')
@@ -232,6 +225,7 @@ def get_schedule(season)
                 text = cell.text.strip
                 row[stat_name]=text 
             end
+
 
             if (!row.blank?)
                 home_team=Team.find_by(name: row['home_team_name'])
@@ -259,8 +253,8 @@ def get_schedule(season)
                     end
                 end 
             end
-        return schedule
-    end
+        end
+    return schedule
 end
 
 ###########################BELOW ARE SCRAPING METHODS NOT USED FOR RAILS DB
