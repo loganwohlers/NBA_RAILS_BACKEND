@@ -1,8 +1,6 @@
 require_relative '../config/environment.rb'
 require_relative 'team_codes'
 
-
-
 #use team codes to creat all 30 teams- and creates team seasons
 def get_teams
     $team_codes.each do |k,v|
