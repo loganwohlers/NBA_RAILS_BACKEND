@@ -21,17 +21,13 @@ TeamSeason.destroy_all
     
 ##################################
 
-#seed one season
+#seed one season- currently only seeding month of Oct
 season=2018
 test_season=Season.create(year: season, description: '2017-2018 NBA Season')
 
-#create all team_season associations for curr season
-get_team_seasons(test_season)
-get_players(test_season)
-get_schedule(test_season)
+seed_season(test_season)
 
-#left off here: WORKING!
-get_season_stats(Game.all)
+
 
 
 # gg=Game.find_by(code: '201710180WAS')

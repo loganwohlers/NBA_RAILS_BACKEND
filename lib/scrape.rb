@@ -12,6 +12,14 @@ def get_teams
     end
 end
 
+def seed_season(season)
+    get_team_seasons(season)
+    get_players(season)
+    get_schedule(season)
+    get_season_stats(season.games)
+
+end
+
 def get_team_seasons (season)
     Team.all.each do |team|
         TeamSeason.create(
