@@ -87,118 +87,115 @@ def get_season_stats(games)
     end
 end
 
+def get_team_boxscore(game, team, mechanize) 
+    mapped_stats=get_game_box(game, team , mechanize)
+    season=game.season
+    mapped_stats.each do |gameline|
+        make_gameline(season, team, game, gameline)     
+    end  
+end
 
-
-
-#ONLY GETS HOMETEAM RIGHT NOW
-def get_team_boxscore(game, team, mechanize)  
-    # puts team_id
-    # puts game.code
-    puts team.name
-    url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
-    puts url
-    page=mechanize.get(url)
-    #  THIS IS THE TEAM CODE
-    table_id='#box_'+team.code.downcase+'_basic'
-    table = page.at(table_id)
-    players=[]
-    stats=[]
-    table.search('tr').each do |tr|
-        headers = tr.search('th')
-        # //getting all player names
-        headers.each do |hh|
-            text = hh.text.strip
-            if(
-                (text!="Basic Box Score Stats") && (text!="Starters") &&
-                (text!="Reserves") &&
-                (text!="Team Totals") &&
-                (text.length > 5)
-            )
-                players.push(text)
-            end
-        end
-        cells = tr.search('td')
-        row={}
-        # get all player data
-        cells.each do |cell|
-            stat_name = cell.attr('data-stat')
-            text = cell.text.strip
-            row[stat_name]=text 
-        end
-
-        # filter empty rows
-        if(row.length>0)
-            stats.push(row)
-        end
-    end
-    # remove team totals from stats
-    stats.pop()
-    puts "GOT HERE!!!"
-
-    # map players to their stats
-    mapped = {}
-    for x in 0..players.length-1
-        mapped[players[x]]=stats[x]
-    end
-
+def make_gameline(season, team, game, gameline)
     # going through our map of player/boxscore and creating a gameline
     #ISSUE w/ players who weren't on that END OF SEASON LIST as they don't exist here
     #temporary fix but need more uniform way to handle
-    season=game.season
-
-    mapped.each do |gameline|
-        ts=TeamSeason.find_by(season_id: season.id, team_id: team.id)
-        player=Player.find_by(name: gameline[0])
-        if(player)
-            ps=PlayerSeason.find_by(
-                player_id: player.id,
-                team_season_id: ts.id
-                )
-        else
-            pl=Player.create(
-                name: gameline[0],
-            )
+    ts=TeamSeason.find_by(season_id: season.id, team_id: team.id)
+    player=Player.find_by(name: gameline[0])
+    if(player)
+        ps=PlayerSeason.find_by(
+            player_id: player.id,
+            team_season_id: ts.id
+        )
+    else
+        pl=Player.create(
+            name: gameline[0],
+        )
             ps=PlayerSeason.create!(
                 player_id: pl.id,
                 team_season_id: ts.id
             )
-        end
-    
-        if !gameline[1]['mp']
-            GameLine.create!(
-                game_id: game.id,
-                player_season_id: ps.id,
-                dnp: true
-            )       
-        else
-            GameLine.create!(
-                game_id: game.id,
-                player_season_id: ps.id,
-                mp: gameline[1]['mp'], 
-                fg:  gameline[1]['fg'],    
-                fga: gameline[1]['fga'],     
-                fg_pct: gameline[1]['fg_pct'],      
-                fg3: gameline[1]['fg3'],    
-                fg3a: gameline[1]['fg3a'],      
-                fg3_pct: gameline[1]['fg3_pct'],      
-                ft: gameline[1]['ft'],      
-                fta: gameline[1]['fta'],      
-                ft_pct: gameline[1]['ft_pct'],     
-                orb: gameline[1]['orb'],     
-                drb: gameline[1]['drb'],     
-                trb: gameline[1]['trb'],     
-                ast: gameline[1]['ast'],     
-                stl: gameline[1]['stl'],     
-                blk: gameline[1]['blk'],     
-                tov: gameline[1]['tov'],     
-                pf: gameline[1]['pf'],     
-                pts: gameline[1]['pts'], 
-                plus_minus: gameline[1]['plus_minus'], 
-                dnp: false    
-                )        
-        end
-    end  
+    end
+
+    if !gameline[1]['mp']
+        GameLine.create!(
+            game_id: game.id,
+            player_season_id: ps.id,
+            dnp: true
+        )       
+    else
+        GameLine.create!(
+            game_id: game.id,
+            player_season_id: ps.id,
+            mp: gameline[1]['mp'], 
+            fg:  gameline[1]['fg'],    
+            fga: gameline[1]['fga'],     
+            fg_pct: gameline[1]['fg_pct'],      
+            fg3: gameline[1]['fg3'],    
+            fg3a: gameline[1]['fg3a'],      
+            fg3_pct: gameline[1]['fg3_pct'],      
+            ft: gameline[1]['ft'],      
+            fta: gameline[1]['fta'],      
+            ft_pct: gameline[1]['ft_pct'],     
+            orb: gameline[1]['orb'],     
+            drb: gameline[1]['drb'],     
+            trb: gameline[1]['trb'],     
+            ast: gameline[1]['ast'],     
+            stl: gameline[1]['stl'],     
+            blk: gameline[1]['blk'],     
+            tov: gameline[1]['tov'],     
+            pf: gameline[1]['pf'],     
+            pts: gameline[1]['pts'], 
+            plus_minus: gameline[1]['plus_minus'], 
+            dnp: false    
+        )  
+    end      
 end
+
+def get_game_box(game, team, mechanize)
+        url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
+        page=mechanize.get(url)
+        table_id='#box_'+team.code.downcase+'_basic'
+        table = page.at(table_id)
+        players=[]
+        stats=[]
+        table.search('tr').each do |tr|
+            headers = tr.search('th')
+            # //getting all player names
+            headers.each do |hh|
+                text = hh.text.strip
+                if(
+                    (text!="Basic Box Score Stats") && (text!="Starters") &&
+                    (text!="Reserves") &&
+                    (text!="Team Totals") &&
+                    (text.length > 5)
+                )
+                    players.push(text)
+                end
+            end
+            cells = tr.search('td')
+            row={}
+            # get all player data
+            cells.each do |cell|
+                stat_name = cell.attr('data-stat')
+                text = cell.text.strip
+                row[stat_name]=text 
+            end
+            # filter empty rows
+            if(row.length>0)
+                stats.push(row)
+            end
+        end
+
+        # remove team totals from stats
+        stats.pop()
+        # map players to their stats
+        mapped = {}
+        for x in 0..players.length-1
+            mapped[players[x]]=stats[x]
+        end
+    return mapped
+end
+
 
 def get_schedule(season)
     # months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
