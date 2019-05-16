@@ -47,13 +47,13 @@ def get_players(season)
                 team_season= TeamSeason.find_by(team_id: team.id)
                 currPlayer=Player.find_or_create_by(
                     name: row['player'],
-                    team_id: team.id,
-                    position: row['position'],
+                    position: row['pos'],
                     out: false 
                 ) 
                 PlayerSeason.create!(
                     team_season_id: team_season.id,
                     player_id: currPlayer.id,
+                    age: row['age'],
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
                     fga_per_g: row['fga_per_g'],     
