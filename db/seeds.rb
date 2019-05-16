@@ -27,14 +27,12 @@ test_season=Season.create(year: season, description: '2017-2018 NBA Season')
 
 #create all team_season associations for curr season
 get_team_seasons(test_season)
-
-# get_players(test_season)
-
+get_players(test_season)
 get_schedule(test_season)
-# #left off here: WORKING!
-# get_season_stats(Game.all)
 
-#testing from last night
+#left off here: WORKING!
+get_season_stats(Game.all)
+
 
 # gg=Game.find_by(code: '201710180WAS')
 # puts gg.code
@@ -44,7 +42,6 @@ get_schedule(test_season)
 
 # team1=Team.first
 # team2=Team.last
-# test_schedule=schedule_check(test_season.year)
 # opener=Game.first
-# get_team_boxscore(opener)
+# get_team_boxscore(opener, opener.home_team.team, mechanize )
 # p GameLine.all

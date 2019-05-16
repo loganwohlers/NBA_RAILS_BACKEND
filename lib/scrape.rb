@@ -82,11 +82,8 @@ end
 def get_season_stats(games)
     mechanize=Mechanize.new
     games.each do |game|
-        puts game.code
-        puts game.home_team_id
-        puts game.away_team_id
-        get_team_boxscore(game, game.home_team_id, mechanize)
-        get_team_boxscore(game, game.away_team_id, mechanize)
+        get_team_boxscore(game, game.home_team.team, mechanize)
+        get_team_boxscore(game, game.away_team.team, mechanize)
     end
 end
 
@@ -94,10 +91,9 @@ end
 
 
 #ONLY GETS HOMETEAM RIGHT NOW
-def get_team_boxscore(game, team_id, mechanize)  
+def get_team_boxscore(game, team, mechanize)  
     # puts team_id
     # puts game.code
-    team=Team.find(team_id)
     puts team.name
     url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
     puts url
@@ -148,27 +144,24 @@ def get_team_boxscore(game, team_id, mechanize)
     # going through our map of player/boxscore and creating a gameline
     #ISSUE w/ players who weren't on that END OF SEASON LIST as they don't exist here
     #temporary fix but need more uniform way to handle
+    season=game.season
+
     mapped.each do |gameline|
-        puts gameline[0]
+        ts=TeamSeason.find_by(season_id: season.id, team_id: team.id)
         player=Player.find_by(name: gameline[0])
         if(player)
             ps=PlayerSeason.find_by(
                 player_id: player.id,
+                team_season_id: ts.id
                 )
         else
             pl=Player.create(
                 name: gameline[0],
-                team_id: team_id
-                )
-            puts pl.name  
-            puts game.season_id
-
+            )
             ps=PlayerSeason.create!(
                 player_id: pl.id,
-                season_id: game.season_id
+                team_season_id: ts.id
             )
-             puts "test"
-
         end
     
         if !gameline[1]['mp']
@@ -240,14 +233,10 @@ def get_schedule(season)
             if (!row.blank?)
                 home_team=Team.find_by(name: row['home_team_name'])
                 away_team=Team.find_by(name: row['visitor_team_name'])
-                p home_team.name
-                p away_team.name
+            
                 home_season=TeamSeason.find_by(season_id: season.id, team_id: home_team.id)
-                away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id)
+                away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id) 
 
-                p home_season.season.year
-                p away_season.season.year
- 
                 Game.create(
                     code: row['code'],
                     date: row['date_game'],
