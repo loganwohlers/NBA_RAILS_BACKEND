@@ -28,9 +28,9 @@ test_season=Season.create(year: season, description: '2017-2018 NBA Season')
 #create all team_season associations for curr season
 get_team_seasons(test_season)
 
-get_players(test_season)
+# get_players(test_season)
 
-# get_schedule(test_season.year)
+get_schedule(test_season)
 # #left off here: WORKING!
 # get_season_stats(Game.all)
 

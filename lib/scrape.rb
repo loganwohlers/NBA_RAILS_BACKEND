@@ -41,7 +41,6 @@ def get_players(season)
             row[stat_name]=text 
         end
         if(row.length>0)
-            puts row
             team= Team.find_by(code: row['team_id'])
             if (team)
                 team_season= TeamSeason.find_by(team_id: team.id)
@@ -212,11 +211,10 @@ def get_schedule(season)
     # months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
     #just testing one month to start
     months=['october']
-    curr_season=Season.find_by(year: season)
     schedule=[]
     mechanize=Mechanize.new
     months.each do |month|
-        input='https://www.basketball-reference.com/leagues/NBA_'+ season.to_s + '_games-' + month + '.html' 
+        input='https://www.basketball-reference.com/leagues/NBA_'+ season.year.to_s + '_games-' + month + '.html' 
         page=mechanize.get(input)
         schedule_table=page.at('#schedule')
                 
@@ -242,16 +240,23 @@ def get_schedule(season)
             if (!row.blank?)
                 home_team=Team.find_by(name: row['home_team_name'])
                 away_team=Team.find_by(name: row['visitor_team_name'])
-                        
+                p home_team.name
+                p away_team.name
+                home_season=TeamSeason.find_by(season_id: season.id, team_id: home_team.id)
+                away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id)
+
+                p home_season.season.year
+                p away_season.season.year
+ 
                 Game.create(
                     code: row['code'],
                     date: row['date_game'],
                     start_time: row['game_start_time'],
                     home_pts: row['home_pts'],
                     away_pts: row['visitor_pts'], 
-                    season_id: curr_season.id,
-                    home_team_id: home_team.id,
-                    away_team_id: away_team.id
+                    season_id: season.id,
+                    home_team_id: home_season.id,
+                    away_team_id: away_season.id
                 )
                     
                 #we break here when we hit the playoffs- could add back
