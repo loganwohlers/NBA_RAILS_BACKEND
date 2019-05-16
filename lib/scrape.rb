@@ -27,8 +27,7 @@ end
 #use them to create player seasons/new players
 def get_players(season)
     mechanize=Mechanize.new
-    curr_season=Season.find_by(year: season)
-    player_url='https://www.basketball-reference.com/leagues/NBA_'+season.to_s+'_per_game.html'
+    player_url='https://www.basketball-reference.com/leagues/NBA_'+season.year.to_s+'_per_game.html'
     player_page=mechanize.get(player_url)
     table_id='#per_game_stats'
     table = player_page.at(table_id)
@@ -42,8 +41,10 @@ def get_players(season)
             row[stat_name]=text 
         end
         if(row.length>0)
+            puts row
             team= Team.find_by(code: row['team_id'])
             if (team)
+                team_season= TeamSeason.find_by(team_id: team.id)
                 currPlayer=Player.find_or_create_by(
                     name: row['player'],
                     team_id: team.id,
@@ -51,7 +52,7 @@ def get_players(season)
                     out: false 
                 ) 
                 PlayerSeason.create!(
-                    season_id: curr_season.id,
+                    team_season_id: team_season.id,
                     player_id: currPlayer.id,
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
