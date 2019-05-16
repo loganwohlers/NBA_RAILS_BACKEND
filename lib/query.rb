@@ -1,13 +1,16 @@
 require_relative '../config/environment.rb'
 
 lebron=Player.find_by(name: "LeBron James")
+season=Season.first
 
 
 p lebron
+p season
 
-avg=lebron.get_season_averages(2017)
-p avg
+# avg=lebron.get_season_averages(2017)
+# puts
+# p avg
 
-teams=lebron.get_all_teams
+# puts
+# p lebron.player_seasons.first.game_lines.last
 
-p teams
