@@ -1,6 +1,8 @@
 require_relative '../config/environment.rb'
 require_relative 'team_codes'
 
+
+
 #use team codes to creat all 30 teams
 def get_teams
     $team_codes.each do |k,v|
@@ -16,7 +18,7 @@ end
 #use them to create player seasons/new players
 def get_players(season)
     mechanize=Mechanize.new
-    test_season=Season.find_by(year: season)
+    curr_season=Season.find_by(year: season)
     player_url='https://www.basketball-reference.com/leagues/NBA_'+season.to_s+'_per_game.html'
     player_page=mechanize.get(player_url)
     table_id='#per_game_stats'
@@ -40,7 +42,7 @@ def get_players(season)
                     out: false 
                 ) 
                 PlayerSeason.create!(
-                    season_id: test_season.id,
+                    season_id: curr_season.id,
                     player_id: currPlayer.id,
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
@@ -67,27 +69,40 @@ def get_players(season)
     end
 end
 
-#ONLY GETS HOMETEAM RIGHT NOW
-def get_team_boxscore(game)  
-
-    team=Team.find(game.home_team_id)
-
-    url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
-    #  THIS IS THE TEAM CODE
+#assocation is wwrongeird here so we have to go find the team instance first
+def get_season_stats(games)
     mechanize=Mechanize.new
+    games.each do |game|
+        puts game.code
+        puts game.home_team_id
+        puts game.away_team_id
+        get_team_boxscore(game, game.home_team_id, mechanize)
+        get_team_boxscore(game, game.away_team_id, mechanize)
+    end
+end
+
+
+
+
+#ONLY GETS HOMETEAM RIGHT NOW
+def get_team_boxscore(game, team_id, mechanize)  
+    # puts team_id
+    # puts game.code
+    team=Team.find(team_id)
+    puts team.name
+    url="https://www.basketball-reference.com/boxscores/#{game.code}.html"
+    puts url
     page=mechanize.get(url)
+    #  THIS IS THE TEAM CODE
     table_id='#box_'+team.code.downcase+'_basic'
     table = page.at(table_id)
     players=[]
     stats=[]
     table.search('tr').each do |tr|
-
         headers = tr.search('th')
         # //getting all player names
         headers.each do |hh|
-
             text = hh.text.strip
-
             if(
                 (text!="Basic Box Score Stats") && (text!="Starters") &&
                 (text!="Reserves") &&
@@ -113,6 +128,7 @@ def get_team_boxscore(game)
     end
     # remove team totals from stats
     stats.pop()
+    puts "GOT HERE!!!"
 
     # map players to their stats
     mapped = {}
@@ -121,11 +137,31 @@ def get_team_boxscore(game)
     end
 
     # going through our map of player/boxscore and creating a gameline
+    #ISSUE w/ players who weren't on that END OF SEASON LIST as they don't exist here
+    #temporary fix but need more uniform way to handle
     mapped.each do |gameline|
-
+        puts gameline[0]
         player=Player.find_by(name: gameline[0])
-        ps=PlayerSeason.find_by(player_id: player.id)
-   
+        if(player)
+            ps=PlayerSeason.find_by(
+                player_id: player.id,
+                )
+        else
+            pl=Player.create(
+                name: gameline[0],
+                team_id: team_id
+                )
+            puts pl.name  
+            puts game.season_id
+
+            ps=PlayerSeason.create!(
+                player_id: pl.id,
+                season_id: game.season_id
+            )
+             puts "test"
+
+        end
+    
         if !gameline[1]['mp']
             GameLine.create!(
                 game_id: game.id,
@@ -166,9 +202,7 @@ def get_schedule(season)
     # months=['october', 'november', 'december', 'january', 'february', 'march', 'april']
     #just testing one month to start
     months=['october']
-
-    test_season=Season.find_by(year: season)
-
+    curr_season=Season.find_by(year: season)
     schedule=[]
     mechanize=Mechanize.new
     months.each do |month|
@@ -205,7 +239,7 @@ def get_schedule(season)
                     start_time: row['game_start_time'],
                     home_pts: row['home_pts'],
                     away_pts: row['visitor_pts'], 
-                    season_id: test_season.id,
+                    season_id: curr_season.id,
                     home_team_id: home_team.id,
                     away_team_id: away_team.id
                 )
