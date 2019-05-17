@@ -5,7 +5,7 @@ season=Season.first
 
 
 
-avg=lebron.get_season_averages(2018)
+avg=lebron.get_player_season(2018)
 games=lebron.get_all_games(2018)
 
 p avg

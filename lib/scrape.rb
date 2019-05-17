@@ -233,7 +233,9 @@ def get_schedule(season)
                 away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id) 
                 Game.create(
                     code: row['code'],
-                    date: row['date_game'],
+
+                    #shave team part(last 4 chars) of of game code for stringified date
+                    date: row['code'][0...-5]
                     start_time: row['game_start_time'],
                     home_pts: row['home_pts'],
                     away_pts: row['visitor_pts'], 
