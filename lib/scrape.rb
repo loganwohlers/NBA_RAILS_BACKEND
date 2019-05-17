@@ -49,15 +49,15 @@ def get_players(season)
         if(row.length>0)
             team= Team.find_by(code: row['team_id'])
             if (team)
-                team_season= TeamSeason.find_by(team_id: team.id)
                 currPlayer=Player.find_or_create_by(
                     name: row['player'],
                     position: row['pos'],
                     out: false 
                 ) 
                 PlayerSeason.create!(
-                    team_season_id: team_season.id,
+                    team_id: team.id,
                     player_id: currPlayer.id,
+                    season_id: season.id,
                     age: row['age'],
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
@@ -104,14 +104,14 @@ end
 
 #could all be find or create by?
 def make_gameline(season, team, game, gameline)
-    ts=TeamSeason.find_by(season_id: season.id, team_id: team.id)
     player=Player.find_or_create_by(name: gameline[0])
   
         ps=PlayerSeason.find_or_create_by(
             player_id: player.id,
-            team_season_id: ts.id
+            team_id: team.id,
+            season_id: season.id
         )
-
+    #this checks for dnp rows
     if !gameline[1]['mp']
         GameLine.create!(
             game_id: game.id,
