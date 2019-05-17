@@ -4,13 +4,14 @@ lebron=Player.find_by(name: "LeBron James")
 season=Season.first
 
 
-p lebron
-p season
 
-# avg=lebron.get_season_averages(2017)
-# puts
-# p avg
+avg=lebron.get_season_averages(2018)
+games=lebron.get_all_games(2018)
 
-# puts
-# p lebron.player_seasons.first.game_lines.last
+p avg
+puts
+
+p games
+p games.length
+puts
 

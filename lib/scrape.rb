@@ -254,7 +254,8 @@ def get_schedule(season)
     return schedule
 end
 
-###########################BELOW ARE SCRAPING METHODS NOT USED FOR RAILS DB
+###########################
+# BELOW ARE SCRAPING METHODS NOT USED FOR RAILS DB
 
 # def get_boxscores(game)
 #     mechanize=Mechanize.new
