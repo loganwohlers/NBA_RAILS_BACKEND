@@ -1,6 +1,14 @@
 require_relative '../config/environment.rb'
 require_relative 'team_codes'
 
+def seed_season(season)
+    get_teams
+    get_team_seasons(season)
+    get_players(season)
+    get_schedule(season)
+    get_season_stats(season.games)
+
+end
 #use team codes to creat all 30 teams- and creates team seasons
 def get_teams
     $team_codes.each do |k,v|
@@ -10,14 +18,6 @@ def get_teams
             nba_tricode: v
         )
     end
-end
-
-def seed_season(season)
-    get_team_seasons(season)
-    get_players(season)
-    get_schedule(season)
-    get_season_stats(season.games)
-
 end
 
 def get_team_seasons (season)
@@ -111,7 +111,6 @@ def make_gameline(season, team, game, gameline)
             player_id: player.id,
             team_season_id: ts.id
         )
-
 
     if !gameline[1]['mp']
         GameLine.create!(
@@ -226,14 +225,12 @@ def get_schedule(season)
                 row[stat_name]=text 
             end
 
-
             if (!row.blank?)
                 home_team=Team.find_by(name: row['home_team_name'])
                 away_team=Team.find_by(name: row['visitor_team_name'])
-            
+
                 home_season=TeamSeason.find_by(season_id: season.id, team_id: home_team.id)
                 away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id) 
-
                 Game.create(
                     code: row['code'],
                     date: row['date_game'],
