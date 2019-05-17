@@ -51,8 +51,7 @@ def get_players(season)
             if (team)
                 currPlayer=Player.find_or_create_by(
                     name: row['player'],
-                    position: row['pos'],
-                    out: false 
+                    position: row['pos']
                 ) 
                 PlayerSeason.create!(
                     team_id: team.id,
