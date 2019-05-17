@@ -1,7 +1,6 @@
 class Player < ApplicationRecord
     has_many :player_seasons
 
-
     def get_season_averages(season)
         p self.player_seasons.first.team_season.team
         return self.player_seasons

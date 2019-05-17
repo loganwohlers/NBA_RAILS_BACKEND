@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_16_163542) do
+ActiveRecord::Schema.define(version: 2019_05_17_182354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,7 +84,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_163542) do
     t.string "tov_per_g"
     t.string "pf_per_g"
     t.string "pts_per_g"
-    t.integer "team_season_id"
+    t.integer "season_id"
+    t.integer "team_id"
   end
 
   create_table "players", force: :cascade do |t|
