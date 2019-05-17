@@ -228,14 +228,12 @@ def get_schedule(season)
             if (!row.blank?)
                 home_team=Team.find_by(name: row['home_team_name'])
                 away_team=Team.find_by(name: row['visitor_team_name'])
-
                 home_season=TeamSeason.find_by(season_id: season.id, team_id: home_team.id)
                 away_season=TeamSeason.find_by(season_id: season.id, team_id: away_team.id) 
                 Game.create(
                     code: row['code'],
-
                     #shave team part(last 4 chars) of of game code for stringified date
-                    date: row['code'][0...-5]
+                    date: row['code'][0...-5],
                     start_time: row['game_start_time'],
                     home_pts: row['home_pts'],
                     away_pts: row['visitor_pts'], 
