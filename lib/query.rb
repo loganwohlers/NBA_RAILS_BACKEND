@@ -13,6 +13,8 @@ pns=Player.all.map do |p|
     p.name
 end
 
+#test
+
 p1=pns[0]
 
 def name_to_url(name)
