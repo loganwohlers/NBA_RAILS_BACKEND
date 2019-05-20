@@ -58,6 +58,11 @@ def get_players(season)
                     player_id: currPlayer.id,
                     season_id: season.id,
                     age: row['age'],
+                    games: row['g'],
+                    fg2_per_g: row['fg2_per_g'],
+                    fg2a_per_g: row['fg2a_per_g'],
+                    fg2_pct: row['fg2_pct'],
+                    trb_per_g: row['trb_per_g'],
                     mp_per_g: row['mp_per_g'], 
                     fg_per_g:  row['fg_per_g'],    
                     fga_per_g: row['fga_per_g'],     
@@ -77,7 +82,7 @@ def get_players(season)
                     tov_per_g: row['tov_per_g'],     
                     pf_per_g: row['pf_per_g'],     
                     pts_per_g: row['pts_per_g'],     
-                    )  
+                    )   
             end
         end
     end
@@ -205,7 +210,7 @@ def get_schedule(season)
         page=mechanize.get(input)
         schedule_table=page.at('#schedule')
                 
-        #this is used to check for the second blank row in the table that only
+        #this is used to check for the second blank row in the table- signifies start of playoffs
         count=0;
         
         schedule_table.search('tr').each do |tr|
