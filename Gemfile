@@ -11,6 +11,9 @@ gem 'pg', '>= 0.18', '< 2.0'
 
 gem 'pry'
 
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
+gem 'rack-cors'
+
 gem 'nokogiri'
 
 gem 'mechanize'

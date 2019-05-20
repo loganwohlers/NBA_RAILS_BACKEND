@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  resources :team_seasons
+  resources :player_seasons
   resources :game_lines
-  resources :nba_games
-  resources :nba_teams
-  resources :nba_seasons
-  resources :nba_players
+  resources :games
+  resources :teams
+  resources :seasons
+  resources :players
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
