@@ -237,7 +237,7 @@ def get_schedule(season)
                 Game.create(
                     code: row['code'],
                     #shave team part(last 4 chars) of of game code for stringified date
-                    date: row['code'][0...-5],
+                    date: row['code'][0..-5],
                     start_time: row['game_start_time'],
                     home_pts: row['home_pts'],
                     away_pts: row['visitor_pts'], 
