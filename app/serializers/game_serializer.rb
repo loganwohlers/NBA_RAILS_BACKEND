@@ -20,9 +20,4 @@ class GameSerializer < ActiveModel::Serializer
         code: self.object.away_team.team.code }
     end
 
-    # def winner
-    #     {winner: self.winner}
-    # end
-    # has_many :game_lines
-
 end
