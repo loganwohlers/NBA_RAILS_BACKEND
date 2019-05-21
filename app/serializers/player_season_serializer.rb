@@ -6,10 +6,6 @@ class PlayerSeasonSerializer < ActiveModel::Serializer
     belongs_to :team
     belongs_to :season
 
-#     def owner
-#     {owner_id: self.object.person.id, 
-#      owner_name: self.object.person.name}
-#   end 
-    # has_many :game_lines    
+ 
 end
 
