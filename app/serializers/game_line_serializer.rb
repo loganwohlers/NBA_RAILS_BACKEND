@@ -5,11 +5,9 @@ class GameLineSerializer < ActiveModel::Serializer
     belongs_to :game
     belongs_to :player_season
 
-
     def player_season
         {player: self.object.player_season.player.name,
         team: self.object.player_season.team.name}
     end    
    
-
 end

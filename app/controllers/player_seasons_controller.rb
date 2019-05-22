@@ -1,8 +1,9 @@
 class PlayerSeasonsController < ApplicationController
 
      def index
-          @players=PlayerSeason.all
-          render json: @players
+         
+               @players=PlayerSeason.all
+               render json: @players
      end
 
      def show
