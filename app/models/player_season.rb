@@ -6,7 +6,10 @@ class PlayerSeason < ApplicationRecord
     has_many :games, through: :game_lines  
 
     def get_last_x_game_lines (x)
-        games= self.games.order(date: :desc).limit(10)
+        games= self.games.order(date: :desc).limit(x)
+        games.map do |gg|
+            gg.game_lines.find_by(player_season_id: self.id)
+        end
     end
 
 
