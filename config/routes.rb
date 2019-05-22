@@ -6,11 +6,12 @@ Rails.application.routes.draw do
   resources :seasons
   resources :players
 
-# get '/patients/:id', to: 'patients#show', as: 'patient'
+  get '/seasons/:id?games=true', to: 'seasons#show'
+  get '/seasons/:id?stats=true', to: 'seasons#show'
 
-  resources :players do
-    resources :player_seasons
-  end
+#  An incoming path of /photos/1?user_id=2 will be dispatched to the show action of the Photos controller. params will be { controller: 'photos', action: 'show', id: '1', user_id: '2' }.
+
+
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
