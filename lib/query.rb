@@ -3,7 +3,7 @@ require_relative '../config/environment.rb'
 lebron=Player.find_by(name: "LeBron James")
 ps=lebron.player_seasons.first
 
-psx=ps.get_last_x_game_lines(10)
+psx=ps.last_x_games(10)
 
 p psx
 
