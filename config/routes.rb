@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :seasons
   resources :players
 
+# get '/patients/:id', to: 'patients#show', as: 'patient'
+
   resources :players do
     resources :player_seasons
   end

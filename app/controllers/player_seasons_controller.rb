@@ -7,7 +7,7 @@ class PlayerSeasonsController < ApplicationController
 
      def show
           @player_season=PlayerSeason.find(params[:id])
-          render json: @player_season
+          render json: @player_season.game_lines.limit(10)
      end
 
    end
