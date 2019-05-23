@@ -10,7 +10,7 @@ require_relative '../config/environment.rb'
 require_relative '../lib/scrape.rb'
 
 #always same 30 teams 
-# Team.destroy_all
+Team.destroy_all
 
 Season.destroy_all
 Player.destroy_all
@@ -24,7 +24,8 @@ TeamSeason.destroy_all
 # seasons=[2016,2017,2018]
 
 #seed one season
-season=2018
-test_season=Season.create(year: season, description: '2017-2018 NBA Season')
-seed_season(test_season)
+season18=Season.create(year: 2018, description: '2017-2018 NBA Season')
+seed_season(season18)
 
+season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
+seed_season(season19)

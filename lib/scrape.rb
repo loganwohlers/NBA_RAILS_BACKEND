@@ -40,12 +40,14 @@ def get_players(season)
     table.search('tr').each do |tr|
         cells = tr.search('td')
         row={}
+
         # get all player data
         cells.each do |cell|
             stat_name = cell.attr('data-stat')
             text = cell.text.strip
             row[stat_name]=text 
         end
+
         if(row.length>0)
             team= Team.find_by(code: row['team_id'])
             if (team)
@@ -58,7 +60,7 @@ def get_players(season)
                     player_id: currPlayer.id,
                     season_id: season.id,
                     age: row['age'],
-                    games: row['g'],
+                    gp: row['g'],
                     fg2_per_g: row['fg2_per_g'],
                     fg2a_per_g: row['fg2a_per_g'],
                     fg2_pct: row['fg2_pct'],
