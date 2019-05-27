@@ -1,11 +1,43 @@
 require_relative '../config/environment.rb'
 
-lebron=Player.find_by(name: "LeBron James")
-ps=lebron.player_seasons.first
+mechanize=Mechanize.new
 
-psx=ps.last_x_games(10)
+url='https://www.skyscanner.com/transport/flights/sea/sfo/190529/190605/?adults=1&children=0&adultsv2=1&childrenv2=&infants=0&cabinclass=economy&rtn=1&preferdirects=false&outboundaltsenabled=false&inboundaltsenabled=false&ref=home#results'
 
-p psx
+page=mechanize.get(url)
+
+id='#fqs-tabs'
+
+info=page.at(id)
+
+
+
+
+    # player_page=mechanize.get(player_url)
+    # table_id='#per_game_stats'
+    # table = player_page.at(table_id)
+    # table.search('tr').each do |tr|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# lebron=Player.find_by(name: "LeBron James")
+# ps=lebron.player_seasons.first
+
+# psx=ps.last_x_games(10)
+
+# p psx
 
 
 
