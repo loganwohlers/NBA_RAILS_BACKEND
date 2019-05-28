@@ -7,7 +7,7 @@ class PlayersController < ApplicationController
 
      def show
           @player=Player.find(params[:id])
-          render json: @player
+          render json: @player.get_player_summary
      end
 
    end

@@ -1,5 +1,4 @@
 class PlayerSeasonsController < ApplicationController
-
      def index
                @players=PlayerSeason.all
                render json: @players
@@ -7,7 +6,7 @@ class PlayerSeasonsController < ApplicationController
 
      def show
           @player_season=PlayerSeason.find(params[:id])
-          render json: @player_season.last_x_games(10)
+          render json: @player_season
      end
 
    end
