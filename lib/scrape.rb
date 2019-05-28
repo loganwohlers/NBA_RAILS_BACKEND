@@ -49,18 +49,20 @@ def get_players(season)
         end
 
         if(row.length>0)
+            binding.pry
             team= Team.find_by(code: row['team_id'])
             if (team)
                 currPlayer=Player.find_or_create_by(
-                    name: row['player'],
-                    position: row['pos']
+                    name: row['player']
                 ) 
+            
                 PlayerSeason.create!(
                     team_id: team.id,
                     player_id: currPlayer.id,
                     season_id: season.id,
                     age: row['age'],
                     gp: row['g'],
+                    position: row['pos'],
                     fg2_per_g: row['fg2_per_g'],
                     fg2a_per_g: row['fg2a_per_g'],
                     fg2_pct: row['fg2_pct'],
