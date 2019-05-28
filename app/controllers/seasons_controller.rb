@@ -14,7 +14,4 @@ class SeasonsController < ApplicationController
             render json: @season.games
         end
      end
-
-
-
-   end
+end

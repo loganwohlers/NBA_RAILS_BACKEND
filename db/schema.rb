@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_22_212115) do
+ActiveRecord::Schema.define(version: 2019_05_28_193341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2019_05_22_212115) do
     t.string "fg2a_per_g"
     t.string "fg2_pct"
     t.string "trb_per_g"
+    t.string "position"
     t.index ["player_id"], name: "index_player_seasons_on_player_id"
     t.index ["season_id"], name: "index_player_seasons_on_season_id"
     t.index ["team_id"], name: "index_player_seasons_on_team_id"
