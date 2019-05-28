@@ -3,9 +3,16 @@ class PlayerSerializer < ActiveModel::Serializer
      has_many :player_seasons
      has_many :teams, through: :player_seasons  
      has_many :seasons, through: :player_seasons 
-     
-#       def player_seasons
-#         {name: self.object.home_team.team.name,
-#         code: self.object.home_team.team.code }
-#     end
+
+     def player_seasons
+          customized=[]
+          object.player_seasons.each do |ps|
+               custom_hash=(ps.attributes)
+               custom_hash['team']=ps.team.code
+               custom_hash['year']=ps.season.year
+               customized.push(custom_hash)
+          end
+          customized
+     end
+
 end
