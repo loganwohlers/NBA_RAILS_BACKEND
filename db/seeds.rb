@@ -21,8 +21,7 @@ TeamSeason.destroy_all
     
 ##################################
 
-# seasons=[2016,2017,2018]
-
+# # seasons=[2016,2017,2018]
 # season18=Season.create(year: 2018, description: '2017-2018 NBA Season')
 # seed_season(season18)
 

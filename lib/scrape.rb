@@ -49,17 +49,20 @@ def get_players(season)
         end
 
         if(row.length>0)
-            binding.pry
             team= Team.find_by(code: row['team_id'])
             if (team)
+                team_season=TeamSeason.find_by(
+                    team_id: team.id,
+                    season_id: season.id
+                )
+
                 currPlayer=Player.find_or_create_by(
                     name: row['player']
                 ) 
             
                 PlayerSeason.create!(
-                    team_id: team.id,
+                    team_season_id: team_season.id,
                     player_id: currPlayer.id,
-                    season_id: season.id,
                     age: row['age'],
                     gp: row['g'],
                     position: row['pos'],
@@ -105,19 +108,19 @@ end
 def get_team_boxscore(game, team, mechanize) 
     mapped_stats=get_game_box(game, team , mechanize)
     season=game.season
+    team_season=TeamSeason.find_by(season_id:season.id, team_id: team.id)
     mapped_stats.each do |gameline|
-        make_gameline(season, team, game, gameline)     
+        make_gameline(team_season, game, gameline)     
     end  
 end
 
 #could all be find or create by?
-def make_gameline(season, team, game, gameline)
+def make_gameline(team_season, game, gameline)
     player=Player.find_or_create_by(name: gameline[0])
   
         ps=PlayerSeason.find_or_create_by(
             player_id: player.id,
-            team_id: team.id,
-            season_id: season.id
+            team_season_id: team_season.id
         )
     #this checks for dnp rows
     if !gameline[1]['mp']

@@ -7,13 +7,12 @@ class Player < ApplicationRecord
     #hacky way around serializer issues
     def get_player_summary
         summary_hash=self.attributes
-        summary_hash['teams']=self.teams
-        summary_hash['seasons']=self.seasons
+        summary_hash['team_seasons']=self.team_seasons
         customized=[]
           self.player_seasons.each do |ps|
                custom_hash=(ps.attributes)
-               custom_hash['team']=ps.team.code
-               custom_hash['year']=ps.season.year
+               custom_hash['team']=ps.team_season.team.code
+               custom_hash['year']=ps.team_season.season.year
                games=[]
                ps.game_lines.each do |g|
                     hash2=(g.attributes)
@@ -40,7 +39,7 @@ class Player < ApplicationRecord
         self.get_player_season(yr).game_lines
     end
 
-    def get_all_teams
+    def get_all_positions
         positions=[]
         self.player_seasons.each do |season|
             positions.push("#{season.position}")
