@@ -8,7 +8,8 @@ class SeasonsController < ApplicationController
         #currently passing a hardcoded yr str
         if(params[:stats])
             @season=Season.find_by(year: params[:id])
-            render json: @season.player_seasons
+            @player_seasons=@season.filter_player_seasons
+            render json: @player_seasons
         elsif (params[:games])
             @season=Season.find_by(year: params[:id])
             render json: @season.games
