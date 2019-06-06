@@ -1,8 +1,7 @@
 class PlayerSerializer < ActiveModel::Serializer
-     attributes :id, :name, :teams, :seasons
+     attributes :id, :name
      has_many :player_seasons
-     has_many :teams, through: :player_seasons  
-     has_many :seasons, through: :player_seasons 
+
 
      #this was too much for the serializer-- so now a player_seasons games are only sent on Player#show
      
