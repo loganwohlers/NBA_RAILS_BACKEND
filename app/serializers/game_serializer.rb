@@ -1,7 +1,6 @@
 class GameSerializer < ActiveModel::Serializer
 
     attributes :id, :code, :date, :start_time, :home_pts, :away_pts
-    # , :winner
     belongs_to :season
     belongs_to :home_team, :class_name => "TeamSeason"
     belongs_to :away_team, :class_name => "TeamSeason"
