@@ -7,7 +7,7 @@ class GameLineSerializer < ActiveModel::Serializer
 
     def player_season
         {player: self.object.player_season.player.name,
-        team: self.object.player_season.team.name}
+        team: self.object.player_season.team_season.team.name}
     end    
    
 end

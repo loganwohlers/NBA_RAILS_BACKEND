@@ -95,7 +95,7 @@ def get_players(season)
     end
 end
 
-#assocation is wwrongeird here so we have to go find the team instance first
+#assocation is weird here so we have to go find the team instance first
 def get_season_stats(games)
     mechanize=Mechanize.new
     games.each do |game|
