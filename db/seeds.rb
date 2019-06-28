@@ -26,16 +26,16 @@ end
     
 ##################################
 
-reset()
+# reset()
 
-# season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
-# seed_season(season19)
+season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
+get_team_seasons(season19)
+get_players(season19)
 
-# get_team_seasons(season19)
-# get_players(season19)
 # get_schedule(season19)
 # get_season_stats(season.games)
 
 
+# seed_season(season19)
 # season18=Season.create(year: 2018, description: '2017-2018 NBA Season')
 # seed_season(season19)
