@@ -28,12 +28,12 @@ end
 
 # reset()
 
-season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
-get_team_seasons(season19)
-get_players(season19)
+season19=Season.find_or_create_by(year: 2019, description: '2018-2019 NBA Season')
+# get_team_seasons(season19)
+# get_players(season19)
 
-# get_schedule(season19)
-# get_season_stats(season.games)
+get_schedule(season19)
+get_season_stats(season19.games)
 
 
 # seed_season(season19)
