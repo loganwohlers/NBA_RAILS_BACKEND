@@ -1,8 +1,8 @@
 require_relative '../config/environment.rb'
 require_relative 'team_codes'
 
+# get_teams
 def seed_season(season)
-    get_teams
     get_team_seasons(season)
     get_players(season)
     get_schedule(season)
