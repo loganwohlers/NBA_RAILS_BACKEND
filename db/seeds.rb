@@ -37,11 +37,11 @@ end
 
 
 season18=Season.find_or_create_by(year: 2018, description: '2017-2018 NBA Season')
-get_team_seasons(season18)
-get_players(season18)
-get_schedule(season18)
+# get_team_seasons(season18)
+# get_players(season18)
+# get_schedule(season18)
 
-# get_season_stats(season18.games)
+get_season_stats(season18.games)
 
 
 # seed_season(season19)
