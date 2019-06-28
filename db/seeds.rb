@@ -10,7 +10,8 @@ require_relative '../config/environment.rb'
 require_relative '../lib/scrape.rb'
 
 #always same 30 teams 
-# Team.destroy_all
+Team.destroy_all
+get_teams
 
 # Season.destroy_all
 # Player.destroy_all
