@@ -15,21 +15,25 @@ require_relative '../lib/scrape.rb'
 # get_teams
 
 #reset fn
-Season.destroy_all
-Player.destroy_all
-PlayerSeason.destroy_all
-Game.destroy_all
-GameLine.destroy_all
-TeamSeason.destroy_all
+def reset
+    Season.destroy_all
+    Player.destroy_all
+    PlayerSeason.destroy_all
+    Game.destroy_all
+    GameLine.destroy_all
+    TeamSeason.destroy_all
+end
     
 ##################################
 
-season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
+reset()
+
+# season19=Season.create(year: 2019, description: '2018-2019 NBA Season')
 # seed_season(season19)
 
 # get_team_seasons(season19)
 # get_players(season19)
-get_schedule(season)
+# get_schedule(season19)
 # get_season_stats(season.games)
 
 
