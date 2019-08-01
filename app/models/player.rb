@@ -26,8 +26,6 @@ class Player < ApplicationRecord
         return summary_hash
     end
 
-
-
     def get_player_season(yr)
         return self.player_seasons.joins(:season).where(seasons: {year: yr}).take
     end

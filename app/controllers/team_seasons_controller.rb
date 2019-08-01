@@ -1,2 +1,0 @@
-class TeamSeasonsController < ApplicationController
-end
