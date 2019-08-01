@@ -1,7 +1,7 @@
 require_relative '../config/environment.rb'
 require_relative 'team_codes'
 
-
+#seed an entire season by passing in a season obj
 def seed_season(season)
     get_team_seasons(season)
     get_players(season)
@@ -9,6 +9,7 @@ def seed_season(season)
     get_season_stats(season.games)
 
 end
+
 #use team codes to creat all 30 teams- and creates team seasons
 def get_teams
     $team_codes.each do |k,v|

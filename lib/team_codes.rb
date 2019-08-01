@@ -11,7 +11,7 @@ $team_codes={
     'Golden State Warriors'=>'GSW',
     'Houston Rockets'=>'HOU',
     'Indiana Pacers'=>'IND',
-    'Los Angeles Clippers'=>'LAC',
+    'Los Angeles Clippers'=>'LAC',    
     'Los Angeles Lakers'=>'LAL',
     'Memphis Grizzlies'=>'MEM',
     'Miami Heat'=>'MIA',
@@ -29,4 +29,4 @@ $team_codes={
     'Toronto Raptors'=>'TOR',
     'Utah Jazz'=>'UTA',
     'Washington Wizards'=>'WAS'
-}
+}   

@@ -14,7 +14,7 @@ require_relative '../lib/scrape.rb'
 # Team.destroy_all
 # get_teams
 
-#reset fn
+#reset fn-- just a crude and hard reset of all table data in db
 def reset
     Season.destroy_all
     Player.destroy_all
@@ -29,21 +29,4 @@ end
 # reset()
 
 # season19=Season.find_or_create_by(year: 2019, description: '2018-2019 NBA Season')
-# get_team_seasons(season19)
-# get_players(season19)
-# get_schedule(season19)
-
-# get_season_stats(season19.games)
-
-
-season18=Season.find_or_create_by(year: 2018, description: '2017-2018 NBA Season')
-# get_team_seasons(season18)
-# get_players(season18)
-# get_schedule(season18)
-
-get_season_stats(season18.games)
-
-
-# seed_season(season19)
-# season18=Season.create(year: 2018, description: '2017-2018 NBA Season')
 # seed_season(season19)
